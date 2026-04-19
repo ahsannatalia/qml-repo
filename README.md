@@ -1,4 +1,4 @@
-# Advantages of Quantum Machine Learning - Disstertaion Project
+# Advantages of Quantum Machine Learning - Disstertation Project
 Variant 4 - Comparing the training time and performance of quantum and classical neural networks
 
 
