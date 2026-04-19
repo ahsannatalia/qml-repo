@@ -1,0 +1,4 @@
+comparison,metric,benchmark_mean,mlp_mean,cohens_d,effect_size,vqc_mean
+benchmark_vs_mlp,time,0.5175973099656404,0.16243723677471278,1.4941921795584572,Large,
+benchmark_vs_vqc,time,0.5175973099656404,,-69.4299515858718,Large,332.3034659382887
+mlp_vs_vqc,time,,0.16243723677471278,-70.19561609098416,Large,332.3034659382887
