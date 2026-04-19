@@ -144,20 +144,3 @@ Plots are saved to `images/` (created automatically if not present). The plots u
 All classification datasets are synthetic and generated programmatically via `sklearn.datasets.make_classification`. No external data download is required to reproduce the main results.
 
 ---
-
-## Citation
-
-If you use this code, please cite:
-
-```
-[Your Name]. ([Year]). [Dissertation Title]. [University].
-Zenodo. https://doi.org/[your-doi-here]
-```
-
----
-
-## License
-
-[MIT / CC BY 4.0 — choose one]
-
-This code was written as part of an undergraduate dissertation and is made available for reproducibility purposes.
