@@ -1,4 +1,6 @@
-# Benchmarking Variational Quantum Classifiers Against Classical Neural Networks
+# Advantages of Quantum Machine Learning - Disstertaion Project
+Variant 4 - Comparing the training time and performance of quantum and classical neural networks
+
 
 Implementation code for the dissertation:
 **"Do quantum neural networks offer a practical advantage over classical neural networks in performance and training efficiency across varying data conditions?"**
