@@ -34,7 +34,8 @@ This repository contains the full implementation used to benchmark a Variational
 
 ---
 
-## Models - default
+## Models
+After a hyperparameter sweep.
 
 ### Variational Quantum Classifier (VQC)
 
@@ -44,10 +45,18 @@ This repository contains the full implementation used to benchmark a Variational
 - **Simulator:** Qiskit `StatevectorSampler`
 - **Input:** 4 features (after PCA reduction where applicable)
 
-### Classical MLP (Benchmark)
+### Classical MLP (Comparable)
 
 - **Architecture:** 1 hidden layer, 4 units
 - **Activation:** tanh
+- **Solver:** lbfgs
+- **Max iterations:** 8000
+- Architecture chosen to match the VQC's parameter count for a fair comparison.
+
+### Classical MLP (Benchmark)
+
+- **Architecture:** 2 hidden layer, 32 and 16 units
+- **Activation:** relu
 - **Solver:** lbfgs
 - **Max iterations:** 8000
 - Architecture chosen to match the VQC's parameter count for a fair comparison.
