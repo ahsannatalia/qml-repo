@@ -14,6 +14,7 @@ from sklearn.preprocessing import StandardScaler
 import time
 from preprocess_data import preprocess_fold
 
+# the parameters from the sweep are set as default
 class VQC_classifier:
     def __init__(self, k=5, seed=1, maxiter=100, fm_rep=1, ansatz_rep=2, ansatz_type='EfficientSU2', max_folds=None):
         self.k = k

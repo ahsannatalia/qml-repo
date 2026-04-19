@@ -4,12 +4,13 @@ import sys
 import os
 from datetime import datetime
 
-# ── Usage ──────────────────────────────────────────────────────────────────
-# python run_cohens_d.py file1.csv file2.csv ...
-# python run_cohens_d.py --time-only file1.csv file2.csv ...
-# ---------------------------------------------------------------------------
+# Computes Cohen's d effect size for each model pair across all metrics.
+# --time-only restricts analysis to training time columns only.
+# Input must be a fold-level CSV (same format as run_ttest.py).
+# Output is saved to cohens_d_results/
+#
 # Cohen's d (paired): d = mean(x1 - x2) / std(x1 - x2)
-# Effect size guide:  small ≥ 0.2,  medium ≥ 0.5,  large ≥ 0.8
+# Effect size guide:  negligible < 0.2, small ≥ 0.2, medium ≥ 0.5, large ≥ 0.8
 
 def cohens_d_paired(x1, x2):
     diff = x1 - x2
@@ -30,7 +31,8 @@ def process_file(fold_csv, time_only=False):
     fold_df = pd.read_csv(fold_csv)
     print(f"\nLoaded {fold_csv} — {len(fold_df)} rows, columns: {list(fold_df.columns)}")
 
-    # ── Auto-detect models and metrics from column names ───────────────────
+    # Same logic as run_ttest.py: identifies model prefixes and the experiment param.
+    # std columns are excluded since they are derived, not raw fold scores.
     skip_std  = {c for c in fold_df.columns if 'std' in c.split('_')}
     skip_cols = {'seed', 'fold'} | skip_std
     _non_skip = [c for c in fold_df.columns if c not in skip_cols]
@@ -46,6 +48,7 @@ def process_file(fold_csv, time_only=False):
 
     metric_cols = [c for c in fold_df.columns if c not in skip_cols and c != param_col]
     if time_only:
+        # restrict to training time when --time-only is passed in the command
         metric_cols = [c for c in metric_cols if c.endswith('_time')]
     models  = sorted(set('_'.join(c.split('_')[:-1]) for c in metric_cols))
     metrics = sorted(set(c.split('_')[-1] for c in metric_cols))
@@ -54,6 +57,7 @@ def process_file(fold_csv, time_only=False):
     print(f"Detected models:  {models}")
     print(f"Detected metrics: {metrics}")
 
+    # test all unique pairs of models
     comparisons = [(m1, m2) for i, m1 in enumerate(models) for m2 in models[i+1:]]
 
     cohens_d_results = []
@@ -102,6 +106,7 @@ def process_file(fold_csv, time_only=False):
     out_df.to_csv(out_path, index=False)
     print(f"\nCohen's d results saved to {out_path}")
 
+# checks if no files are given
 if len(sys.argv) < 2:
     print("Usage: python run_cohens_d.py [--time-only] <file1.csv> [file2.csv ...]")
     sys.exit(1)
