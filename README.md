@@ -112,19 +112,15 @@ Fold-level CSVs (named `*_folds_*.csv`) are required as input.
 
 ```bash
 # Paired t-test
-python run_ttest.py <file_name>
+python run_ttest.py <file1.csv> [file2.csv ...]
 ```
 
 Results are saved to `ttest_results/`.
 
 ```bash
 # Cohen's d effect size
-python run_cohens_d.py <file_name>
-```
-
-```bash
-# Cohen's d effect size - for only time columns
-python run_cohens_d.py --time-only <file_name>
+# --time-only - runs the analysis for only time columns in the csv file
+python run_cohens_d.py [--time-only] <file1.csv> [file2.csv ...]
 ```
 
 Results are saved to `cohens_d_results/`.
