@@ -14,9 +14,10 @@ from preprocess_data import preprocess_fold
 
 
 class MLP_classifier:
-    def __init__(self):
-        self.k = 5
-        self.kf = KFold(n_splits=self.k, shuffle=True, random_state=1)
+    def __init__(self, k=5, seed=1, maxiter=8000, hidden=(4,), activation="tanh", solver="lbfgs"):
+        self.k = k
+        self.seed = seed
+        self.kf = KFold(n_splits=self.k, shuffle=True, random_state=self.seed)
         # splits the data into 10 equal parts, randomisies the data before splitting 
 
         self.Accuracies = []
@@ -24,7 +25,10 @@ class MLP_classifier:
         self.F1_scores = []
         self.Recalls = []
         self.TrainTimes = []
-
+        self.maxiter=maxiter
+        self.hidden = hidden
+        self.activation = activation
+        self.solver = solver
 
     def reset(self):
         self.Accuracies.clear()
@@ -45,11 +49,11 @@ class MLP_classifier:
             X_train, X_test = preprocess_fold(X_train, X_test, 
                                            mode=preprocess_mode, 
                                            n_components=n_components)
-            # new MLP model each fold
-            # clf = MLPClassifier(random_state=1, max_iter=1000)
+            
+            print(f"num of features: ", X_train.shape[1])
 
-            # need to match VQC parameters
-            clf = MLPClassifier(hidden_layer_sizes=(3,), activation="tanh", solver = 'lbfgs', random_state=1, max_iter=8000)
+            # creating the classifier
+            clf = MLPClassifier(hidden_layer_sizes=self.hidden, activation=self.activation, solver =self.solver, random_state=self.seed, max_iter=self.maxiter)
             
             # training the model
             start = time.perf_counter()
@@ -67,9 +71,9 @@ class MLP_classifier:
         
             # evaluating on unseen data
             score = clf.score(X_test, y_test)
-            precision = precision_score(y_test, y_pred, average='weighted', zero_division=0)
-            recall = recall_score(y_test, y_pred, average='weighted', zero_division=0)
-            F1_score = f1_score(y_test, y_pred, average='weighted', zero_division=0)
+            precision = precision_score(y_test, y_pred)
+            recall = recall_score(y_test, y_pred)
+            F1_score = f1_score(y_test, y_pred)
             
             # appending the score to the arrays
             self.Accuracies.append(score)
@@ -88,11 +92,11 @@ class MLP_classifier:
     def get_accuracies(self):
         return self.Accuracies
         
-    def get_precision(self):
+    def get_precisions(self):
         return self.Precisions
         
     def get_recalls(self):
         return self.Recalls
         
-    def get_F1_Score(self):
+    def get_F1_Scores(self):
         return self.F1_scores

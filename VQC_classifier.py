@@ -1,6 +1,6 @@
 from qiskit.circuit.library import ZZFeatureMap
-from qiskit.circuit.library import RealAmplitudes
-from qiskit_machine_learning.optimizers import COBYLA
+from qiskit.circuit.library import RealAmplitudes, EfficientSU2
+from qiskit_machine_learning.optimizers import COBYLA, adam
 from IPython.display import clear_output
 from qiskit_machine_learning.algorithms.classifiers import VQC
 import pandas as pd
@@ -15,17 +15,22 @@ import time
 from preprocess_data import preprocess_fold
 
 class VQC_classifier:
-    def __init__(self):
-        self.k = 5
-        self.kf = KFold(n_splits=self.k, shuffle=True, random_state=1)
+    def __init__(self, k=5, seed=1, maxiter=100, fm_rep=1, ansatz_rep=2, ansatz_type='EfficientSU2', max_folds=None):
+        self.k = k
+        self.seed = seed
+        self.kf = KFold(n_splits=self.k, shuffle=True, random_state=self.seed)
         
         self.Accuracies = []
         self.Precisions = []
         self.F1_scores = []
         self.Recalls = []
-        self.maxiter = 300
+        self.maxiter = maxiter
         self.TrainTimes = []
         self.objective_values = []
+        self.fm_rep = fm_rep
+        self.ansatz_rep = ansatz_rep
+        self.ansatz_type = ansatz_type
+        self.max_folds = max_folds
 
     def reset(self):
         self.Accuracies.clear()
@@ -40,20 +45,26 @@ class VQC_classifier:
         sampler = Sampler()
 
         for fold, (train_idx, test_idx) in enumerate(self.kf.split(X), start=1):
+            if self.max_folds is not None and fold > self.max_folds:
+                break
             X_train, X_test = X[train_idx], X[test_idx]
             y_train, y_test = y[train_idx], y[test_idx]
             fold_objectives = []
 
             X_train, X_test = preprocess_fold(X_train, X_test, mode=preprocess_mode, n_components=n_components)
             
-            num_features = X.shape[1]
+            num_features = X_train.shape[1]
+            print(f"num of features: ", num_features)
 
             def callback(weights, obj_value):
                 fold_objectives.append(obj_value)
         
-            feature_map = ZZFeatureMap(feature_dimension=num_features, reps=2)
-        
-            ansatz = RealAmplitudes(num_qubits=num_features, reps=3)
+            feature_map = ZZFeatureMap(feature_dimension=num_features, reps=self.fm_rep)
+
+            if self.ansatz_type == 'EfficientSU2':
+                ansatz = EfficientSU2(num_qubits=num_features, reps=self.ansatz_rep)
+            else:
+                ansatz = RealAmplitudes(num_qubits=num_features, reps=self.ansatz_rep)
         
             # using an optimiser
             optimizer = COBYLA(maxiter=self.maxiter)
@@ -80,9 +91,9 @@ class VQC_classifier:
 
             # evaluating on unseen data
             score = vqc.score(X_test, y_test)
-            precision = precision_score(y_test, y_pred, average="weighted", zero_division=0)
-            recall = recall_score(y_test, y_pred, average="weighted", zero_division=0)
-            F1_score = f1_score(y_test, y_pred, average="weighted", zero_division=0)
+            precision = precision_score(y_test, y_pred)
+            recall = recall_score(y_test, y_pred)
+            F1_score = f1_score(y_test, y_pred)
             
             # appending the score to the arrays
             self.Accuracies.append(score)
@@ -102,13 +113,13 @@ class VQC_classifier:
     def get_accuracies(self):
         return self.Accuracies
         
-    def get_precision(self):
+    def get_precisions(self):
         return self.Precisions
         
     def get_recalls(self):
         return self.Recalls
         
-    def get_F1_Score(self):
+    def get_F1_Scores(self):
         return self.F1_scores
 
     def get_objective_values(self):
