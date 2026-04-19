@@ -1,4 +1,4 @@
-
+https://doi.org/10.5281/zenodo.19655384
 
 # Advantages of Quantum Machine Learning - Dissertation Project
 Variant 4 - Comparing the training time and performance of quantum and classical neural networks
