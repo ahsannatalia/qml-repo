@@ -1,7 +1,7 @@
 # Benchmarking Variational Quantum Classifiers Against Classical Neural Networks
 
 Implementation code for the dissertation:
-**"[Do quantum neural networks offer a practical advantage over classical neural networks in performance and training efficiency across varying data conditions?]"**
+**"Do quantum neural networks offer a practical advantage over classical neural networks in performance and training efficiency across varying data conditions?"**
 Natalia Ahsan — King's College London - k23080184, 2026
 
 ---
