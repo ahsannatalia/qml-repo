@@ -12,7 +12,7 @@ from sklearn.decomposition import PCA
 import time
 from preprocess_data import preprocess_fold
 
-# comparable model parameters are passed as default
+# comparable model parameters (from the sweep) are passed as default
 class MLP_classifier:
     def __init__(self, k=5, seed=1, maxiter=8000, hidden=(4,), activation="tanh", solver="lbfgs"):
         self.k = k
