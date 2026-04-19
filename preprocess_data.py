@@ -1,8 +1,5 @@
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.decomposition import PCA
-from sklearn.datasets import fetch_openml
-from sklearn.utils import resample
-import numpy as np
 
 def preprocess_fold(X_train, X_test, mode, n_components=None):
     """

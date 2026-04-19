@@ -1,14 +1,7 @@
 from sklearn.neural_network import MLPClassifier
-import pandas as pd
-from sklearn.preprocessing import LabelEncoder, MinMaxScaler, StandardScaler
-import seaborn as sns
-from sklearn.model_selection import train_test_split
-from qiskit_machine_learning.utils import algorithm_globals
 import numpy as np
-from matplotlib import pyplot as plt
 from sklearn.model_selection import KFold
 from sklearn.metrics import precision_score, recall_score, f1_score
-from sklearn.decomposition import PCA
 import time
 from preprocess_data import preprocess_fold
 

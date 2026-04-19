@@ -1,16 +1,11 @@
 from qiskit.circuit.library import ZZFeatureMap
 from qiskit.circuit.library import RealAmplitudes, EfficientSU2
-from qiskit_machine_learning.optimizers import COBYLA, adam
-from IPython.display import clear_output
+from qiskit_machine_learning.optimizers import COBYLA
 from qiskit_machine_learning.algorithms.classifiers import VQC
-import pandas as pd
 import numpy as np
 from sklearn.model_selection import KFold
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
-from matplotlib import pyplot as plt
+from sklearn.metrics import precision_score, recall_score, f1_score
 from qiskit.primitives import StatevectorSampler as Sampler
-from sklearn.decomposition import PCA
-from sklearn.preprocessing import StandardScaler
 import time
 from preprocess_data import preprocess_fold
 
